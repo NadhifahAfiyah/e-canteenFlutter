@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart'; // error
+import 'package:intl/intl.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -40,17 +40,18 @@ class _MenuPageState extends State<MenuPage> {
   final CollectionReference _orderRef =
       FirebaseFirestore.instance.collection('orders');
 
-  String activeFilter = "Semua"; // Default: tampilkan semua
+  /// Default filter memakai lowercase agar cocok dengan Firestore
+  String activeFilter = "semua";
 
   String formatRupiah(int price) {
-    return NumberFormat.currency( //NumberFormat nya error
+    return NumberFormat.currency(
       locale: 'id_ID',
       symbol: 'Rp ',
       decimalDigits: 0,
     ).format(price);
   }
 
-  // Dialog Pemesanan
+  // DIALOG PEMESANAN 
   void _showOrderDialog(String menuName, int price) {
     final TextEditingController nameController = TextEditingController();
 
@@ -61,8 +62,8 @@ class _MenuPageState extends State<MenuPage> {
         content: TextField(
           controller: nameController,
           decoration: const InputDecoration(
-              labelText: "Nama Pemesan",
-              hintText: "Contoh: Budi (TI-2A)"
+            labelText: "Nama Pemesan",
+            hintText: "Contoh: Budi (TI-2A)",
           ),
         ),
         actions: [
@@ -82,26 +83,25 @@ class _MenuPageState extends State<MenuPage> {
                 });
 
                 Navigator.pop(ctx);
+
                 ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Pesanan berhasil dikirim!"))
+                  const SnackBar(content: Text("Pesanan berhasil dikirim!")),
                 );
               }
             },
             child: const Text("Pesan Sekarang"),
-          )
+          ),
         ],
       ),
     );
   }
 
-  // Query berdasarkan filter
+  // STREAM FILTER 
   Stream<QuerySnapshot> getMenuStream() {
-    if (activeFilter == "Semua") {
+    if (activeFilter == "semua") {
       return _menuRef.snapshots();
     } else {
-      return _menuRef
-          .where('category', isEqualTo: activeFilter)
-          .snapshots();
+      return _menuRef.where('category', isEqualTo: activeFilter).snapshots();
     }
   }
 
@@ -112,7 +112,7 @@ class _MenuPageState extends State<MenuPage> {
         title: const Text("E-Canteen Poliwangi"),
       ),
 
-      // ======================== FILTER BUTTON ========================
+      // FILTER BUTTON 
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(10),
         child: Row(
@@ -120,31 +120,29 @@ class _MenuPageState extends State<MenuPage> {
           children: [
             FilterButton(
               label: "Semua",
-              active: activeFilter == "Semua",
-              onTap: () => setState(() => activeFilter = "Semua"),
+              active: activeFilter == "semua",
+              onTap: () => setState(() => activeFilter = "semua"),
             ),
             FilterButton(
               label: "Makanan",
-              active: activeFilter == "Makanan",
-              onTap: () => setState(() => activeFilter = "Makanan"),
+              active: activeFilter == "makanan",
+              onTap: () => setState(() => activeFilter = "makanan"),
             ),
             FilterButton(
               label: "Minuman",
-              active: activeFilter == "Minuman",
-              onTap: () => setState(() => activeFilter = "Minuman"),
+              active: activeFilter == "minuman",
+              onTap: () => setState(() => activeFilter = "minuman"),
             ),
           ],
         ),
       ),
 
-      // ======================== LIST MENU ============================
+      // LIST MENU
       body: StreamBuilder(
         stream: getMenuStream(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
-            return const Center(
-              child: Text("Terjadi kesalahan koneksi."),
-            );
+            return const Center(child: Text("Terjadi kesalahan koneksi."));
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -175,11 +173,9 @@ class _MenuPageState extends State<MenuPage> {
                   subtitle: Text(formatRupiah(data['price'])),
                   trailing: ElevatedButton(
                     onPressed: data['isAvailable'] == true
-                        ? () =>
-                            _showOrderDialog(data['name'], data['price'])
+                        ? () => _showOrderDialog(data['name'], data['price'])
                         : null,
-                    child:
-                        Text(data['isAvailable'] ? "Pesan" : "Habis"),
+                    child: Text(data['isAvailable'] ? "Pesan" : "Habis"),
                   ),
                 ),
               );
@@ -191,7 +187,7 @@ class _MenuPageState extends State<MenuPage> {
   }
 }
 
-// Widget tombol filter
+// FILTER BUTTON WIDGET 
 class FilterButton extends StatelessWidget {
   final String label;
   final bool active;
