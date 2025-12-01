@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "551719042382",
+    "project_id": "ecanteen-362458302100-nadhif",
+    "storage_bucket": "ecanteen-362458302100-nadhif.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:551719042382:android:14ce77e328c4803de2721f",
+        "android_client_info": {
+          "package_name": "com.example.e_canteen"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCJb9dNxCMqUuqfynVtgxchskuzAZtUZo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
